@@ -6,9 +6,9 @@ export async function createsMarkup (result) {
   [...res].map(({webformatURL, largeImageURL, tags, likes, views, comments, downloads}) => {
     refs.gallery.insertAdjacentHTML("beforeend", 
     `
-    <li class="image" >
+    <li class="image" min-height="200px">
       <a href="${largeImageURL}">
-      <img src=${webformatURL} alt="${tags}" lazyload>
+      <img src=${webformatURL} alt="${tags}"  lazyload>
       <ul class="image-stats">
       <li class="stat">
         <p class='stat-text'>Likes</p>
