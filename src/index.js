@@ -27,13 +27,16 @@ refs.searchBtn.addEventListener("click", searchBtnHandler)
 
 async function searchBtnHandler (e) {
   e.preventDefault()
+  // resetsQuery()
   resetsPage ()
   resetsMarkup ()
+
   
   if (refs.searchInput.value.trim().length === 0 ) {
     Notiflix.Notify.failure(`The input is empty. Enter minimum 1 symbol`);
   } else {
     const res = await getImg(tempValues.query, tempValues.page)
+    
 
     if(res.total === 0) {
       console.log("message")
@@ -52,8 +55,9 @@ async function searchBtnHandler (e) {
       
     }
    
-    resetsQuery()
+    
   }
+
 
 }
 
@@ -68,7 +72,7 @@ function pinsSearchSection () {
 }
 
 function searchInputHandler (e) {
-  tempValues.query = e.currentTarget.value
+  tempValues.query = e.target.value
 }
 
 function resetsQuery () {
@@ -113,14 +117,20 @@ const observer = new IntersectionObserver(infiniteScrollHandler, options)
  function infiniteScrollHandler (entries) {
    entries.forEach(async (entry) => {
     if (entry.isIntersecting) {
-      incrementsPage ();
       const res = await getImg(tempValues.query, tempValues.page); 
       if (res.total === 0) {
         observer.unobserve(refs.guard)
       } else {
         await createsMarkup (res.hits)
         addsLightbox ();
+
+
+        if ((tempValues.page-1)*40 >= res.totalHits) {
+          Notiflix.Notify.success(`You are at the end of the collection`)
+        }
       }  
+
+      incrementsPage ();
     }
   })
 }
