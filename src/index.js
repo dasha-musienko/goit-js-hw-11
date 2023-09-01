@@ -16,6 +16,7 @@ const tempValues = {
   query: "",
   page: 1,
   totalHits: 0,
+  successCount: 0,
 }
 
 let lightbox = "";
@@ -28,7 +29,6 @@ refs.searchBtn.addEventListener("click", searchBtnHandler)
 
 async function searchBtnHandler (e) {
   e.preventDefault()
-  // resetsQuery()
   resetsPage ()
   resetsMarkup ()
 
@@ -39,9 +39,8 @@ async function searchBtnHandler (e) {
     const res = await getImg(tempValues.query, tempValues.page)
     
     tempValues.totalHits = res.totalHits;
-    console.log(tempValues.totalHits)
+    tempValues.successCount = 0;
     if(res.total === 0) {
-      console.log("message")
       Notiflix.Notify.failure(`Sorry, there are no images matching your search query. Please try again.`)
 
     } else {
@@ -131,7 +130,12 @@ const observer = new IntersectionObserver(infiniteScrollHandler, options)
         incrementsPage ();
       }
       else if ((tempValues.page-1)*40 >= tempValues.totalHits){
-        Notiflix.Notify.success(`You are at the end of the collection`)
+        tempValues.successCount += 1;
+
+        if (tempValues.successCount === 1) {
+          Notiflix.Notify.success(`You are at the end of the collection`)
+        }
+        
       }
       
     }
