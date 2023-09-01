@@ -8,7 +8,7 @@ export async function createsMarkup (result) {
     `
     <li class="image" min-height="200px">
       <a href="${largeImageURL}">
-      <img src=${webformatURL} alt="${tags}"  lazyload>
+      <img src=${webformatURL} alt="${tags}" lazyload>
       <ul class="image-stats">
       <li class="stat">
         <p class='stat-text'>Likes</p>

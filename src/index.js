@@ -15,6 +15,7 @@ export const refs = {
 const tempValues = {
   query: "",
   page: 1,
+  totalHits: 0,
 }
 
 let lightbox = "";
@@ -37,7 +38,8 @@ async function searchBtnHandler (e) {
   } else {
     const res = await getImg(tempValues.query, tempValues.page)
     
-
+    tempValues.totalHits = res.totalHits;
+    console.log(tempValues.totalHits)
     if(res.total === 0) {
       console.log("message")
       Notiflix.Notify.failure(`Sorry, there are no images matching your search query. Please try again.`)
@@ -117,20 +119,21 @@ const observer = new IntersectionObserver(infiniteScrollHandler, options)
  function infiniteScrollHandler (entries) {
    entries.forEach(async (entry) => {
     if (entry.isIntersecting) {
-      const res = await getImg(tempValues.query, tempValues.page); 
-      if (res.total === 0) {
+      if ((tempValues.page*40 - tempValues.totalHits) < 40) {
+        const res = await getImg(tempValues.query, tempValues.page); 
+        if (res.total === 0) {
         observer.unobserve(refs.guard)
       } else {
         await createsMarkup (res.hits)
         addsLightbox ();
-
-
-        if ((tempValues.page-1)*40 >= res.totalHits) {
-          Notiflix.Notify.success(`You are at the end of the collection`)
-        }
       }  
 
-      incrementsPage ();
+        incrementsPage ();
+      }
+      else if ((tempValues.page-1)*40 >= tempValues.totalHits){
+        Notiflix.Notify.success(`You are at the end of the collection`)
+      }
+      
     }
   })
 }
